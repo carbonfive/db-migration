@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.carbonfive</groupId>
         <artifactId>db-support-parent</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>0.9.5-rc5</version>
     </parent>
     <artifactId>db-migration</artifactId>
     <packaging>jar</packaging>
