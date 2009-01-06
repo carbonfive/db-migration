@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <util:properties id="properties" location="classpath:datasource.properties"/>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="properties"/>
+    </bean>
+
+    <bean name="dataSourceFactory" class="com.carbonfive.db.jdbc.datasource.C3P0DataSourceFactory">
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="clientDataSource" class="com.carbonfive.db.jdbc.datasource.ContextRoutingDataSource">
+        <constructor-arg ref="dataSourceFactory"/>
+        <constructor-arg ref="contextService"/>
+    </bean>
+
+    <bean id="contextService" class="com.carbonfive.db.jdbc.datasource.ContextServiceImpl"/>
+
+</beans>

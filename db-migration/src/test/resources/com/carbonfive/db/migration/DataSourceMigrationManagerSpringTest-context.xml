@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
+        <property name="URL" value="jdbc:h2:mem:dsmmst;DB_CLOSE_DELAY=-1"/>
+        <property name="user" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="migrationResolver" class="com.carbonfive.db.migration.ResourceMigrationResolver">
+        <constructor-arg value="classpath:/test_migrations/dsmmst/*.sql"/>
+    </bean>
+
+    <bean id="migrationManager" class="com.carbonfive.db.migration.DataSourceMigrationManager">
+        <constructor-arg ref="dataSource"/>
+        <property name="migrationResolver" ref="migrationResolver"/>
+    </bean>
+
+</beans>

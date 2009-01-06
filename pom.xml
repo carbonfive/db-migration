@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>com.carbonfive</groupId>
+        <artifactId>c5-parent</artifactId>
+        <version>4</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.carbonfive</groupId>
+    <artifactId>db-support-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>0.9.5-SNAPSHOT</version>
+    <name>Carbon Five Database Support Parent</name>
+    <url>http://www.carbonfive.com</url>
+
+    <description>Carbon Five Database Support is a collection of miscellaneous classes which provide additional database utility.</description>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Carbon Five, Inc.</name>
+        <url>http://www.carbonfive.com/</url>
+    </organization>
+
+    <prerequisites>
+        <maven>2.0.6</maven>
+    </prerequisites>
+
+    <modules>
+        <module>db-support</module>
+        <module>db-migration</module>
+        <module>db-migration-maven-plugin</module>
+    </modules>
+
+    <properties>
+        <java.source>1.5</java.source>
+        <java.target>1.5</java.target>
+    </properties>
+
+    <scm>
+        <connection>scm:svn:https://c5-db-migration.googlecode.com/svn/trunk/</connection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>c5-public-repository</id>
+            <name>Carbon Five Public Repository</name>
+            <url>http://mvn.carbonfive.com/groups/public</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss-repository</id>
+            <url>http://repository.jboss.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.mockrunner</groupId>
+                <artifactId>mockrunner</artifactId>
+                <version>0.4</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dbunit</groupId>
+                <artifactId>dbunit</artifactId>
+                <version>2.4.2</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>oro</groupId>
+                <artifactId>oro</artifactId>
+                <version>2.0.8</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>1.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>3.3.1.GA</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>c3p0</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>0.9.1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>1.8.0.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>8.3-603.jdbc3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sourceforge.jtds</groupId>
+                <artifactId>jtds</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all-minimal</artifactId>
+                <version>1.5.7</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.source}</source>
+                    <target>${java.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/Abstract*Test.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
