@@ -26,11 +26,19 @@ public class DropDatabaseTest
     }
 
     @Test
-    public void dropSqlServerDatabase() throws Exception
+    public void dropSqlServer2000Database() throws Exception
     {
         assumeThat(InetAddress.getLocalHost().getHostAddress(), startsWith("10.4.5"));
 
         dropDatabase("jdbc:jtds:sqlserver://sqlserver2000/drop_database_test");
+    }
+
+    @Test
+    public void dropSqlServer2005Database() throws Exception
+    {
+        assumeThat(InetAddress.getLocalHost().getHostAddress(), startsWith("10.4.5"));
+
+        dropDatabase("jdbc:jtds:sqlserver://sqlserver2005/drop_database_test");
     }
 
     void dropDatabase(String url) throws Exception

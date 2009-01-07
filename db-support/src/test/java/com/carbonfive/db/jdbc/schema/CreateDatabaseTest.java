@@ -28,12 +28,21 @@ public class CreateDatabaseTest
     }
 
     @Test
-    public void createSqlServerDatabase() throws Exception
+    public void createSqlServer2000Database() throws Exception
     {
         assumeThat(InetAddress.getLocalHost().getHostAddress(), startsWith("10.4.5"));
         
         createDatabase("jdbc:jtds:sqlserver://sqlserver2000/create_database_test");
         createDatabase("jdbc:jtds:sqlserver://sqlserver2000/create-database-test");
+    }
+
+    @Test
+    public void createSqlServer2005Database() throws Exception
+    {
+        assumeThat(InetAddress.getLocalHost().getHostAddress(), startsWith("10.4.5"));
+
+        createDatabase("jdbc:jtds:sqlserver://sqlserver2005/create_database_test");
+        createDatabase("jdbc:jtds:sqlserver://sqlserver2005/create-database-test");
     }
 
     private void createDatabase(String url) throws SQLException, ClassNotFoundException
