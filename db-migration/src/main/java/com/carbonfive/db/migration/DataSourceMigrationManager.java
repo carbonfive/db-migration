@@ -63,14 +63,7 @@ public class DataSourceMigrationManager implements MigrationManager
 
     public SortedSet<String> pendingMigrations()
     {
-        Set<String> appliedMigrations = (Set<String>) jdbcTemplate.execute(new ConnectionCallback()
-        {
-            public Object doInConnection(Connection connection) throws SQLException, DataAccessException
-            {
-                return versionStratgey.appliedMigrations(dbType, connection);
-            }
-        });
-
+        Set<String> appliedMigrations = determineAppliedMigrationVersions();
         Set<Migration> availableMigrations = migrationResolver.resolve();
         CollectionUtils.transform(availableMigrations, new Transformer()
         {
@@ -88,13 +81,7 @@ public class DataSourceMigrationManager implements MigrationManager
 
     public void migrate()
     {
-        Set<String> appliedMigrations = (Set<String>) jdbcTemplate.execute(new ConnectionCallback()
-        {
-            public Object doInConnection(Connection connection) throws SQLException, DataAccessException
-            {
-                return versionStratgey.appliedMigrations(dbType, connection);
-            }
-        });
+        Set<String> appliedMigrations = determineAppliedMigrationVersions();
 
         if (appliedMigrations == null)
         {
@@ -105,6 +92,7 @@ public class DataSourceMigrationManager implements MigrationManager
         Set<Migration> availableMigrations = migrationResolver.resolve();
 
         // Which migrations need to be applied (ie: are pending)?
+        // TODO This seems like something that could be in its own method.
         final List<Migration> pendingMigrations = new ArrayList<Migration>(availableMigrations.size());
         CollectionUtils.select(availableMigrations, new PendingMigrationPredicate(appliedMigrations), pendingMigrations);
         Collections.sort(pendingMigrations);
@@ -115,8 +103,7 @@ public class DataSourceMigrationManager implements MigrationManager
             return;
         }
 
-        // Check that no two pending migrations are the same version.
-        // ...
+        // TODO Check that no two pending migrations are the same version.
         StopWatch watch = new StopWatch();
         watch.start();
 
@@ -207,8 +194,20 @@ public class DataSourceMigrationManager implements MigrationManager
         });
     }
 
+    private Set<String> determineAppliedMigrationVersions()
+    {
+        return (Set<String>) jdbcTemplate.execute(new ConnectionCallback()
+        {
+            public Object doInConnection(Connection connection) throws SQLException, DataAccessException
+            {
+                return versionStratgey.appliedMigrations(dbType, connection);
+            }
+        });
+    }
+
     private static class PendingMigrationPredicate implements Predicate
     {
+
         private final Set<String> appliedMigrations;
 
         public PendingMigrationPredicate(Set<String> appliedMigrations)

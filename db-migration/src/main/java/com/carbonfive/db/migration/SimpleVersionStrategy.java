@@ -27,11 +27,11 @@ public class SimpleVersionStrategy implements VersionStrategy
     private String appliedDateColumn = DEFAULT_APPLIED_DATE_COLUMN;
     private String durationColumn = DEFAULT_DURATION_COLUMN;
 
-    private static final String defaultEnableVersioningDDL = "create table %s (%s varchar(32) not null unique, %s timestamp not null, %s int not null)";
-    private static final DefaultedMap enableVersioningDDL = new DefaultedMap(defaultEnableVersioningDDL);
+    private static final DefaultedMap enableVersioningDDL;
 
     static
     {
+        enableVersioningDDL = new DefaultedMap("create table %s (%s varchar(32) not null unique, %s timestamp not null, %s int not null)");
         enableVersioningDDL.put(HSQL, "create table %s (%s varchar not null, %s datetime not null, %s int not null, constraint %2$s_unique unique (%2$s))");
         enableVersioningDDL.put(SQL_SERVER, "create table %s (%s varchar(32) not null unique, %s datetime not null, %s int not null)");
     }

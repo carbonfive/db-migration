@@ -25,7 +25,7 @@ public class GroovyMigrationTest
     {
         Resource script = new ClassPathResource("/test_migrations/groovy_1/001_create_users.groovy");
         Connection connection = dataSource.getConnection();
-        new GroovyMigration("1", script).migrate(DatabaseType.UNKNOWN, connection);
+        new GroovyMigration("1", script).migrate(DatabaseType.H2, connection);
         connection.close();
 
         SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
