@@ -52,7 +52,7 @@
         <repository>
             <id>c5-public-repository</id>
             <name>Carbon Five Public Repository</name>
-            <url>http://mvn.carbonfive.com/groups/public</url>
+            <url>http://mvn.carbonfive.com/public</url>
             <snapshots>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
