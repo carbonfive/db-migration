@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.carbonfive</groupId>
         <artifactId>c5-parent</artifactId>
-        <version>4</version>
+        <version>5</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
