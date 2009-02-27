@@ -77,9 +77,6 @@ class ScriptRunnerImpl
                     {
                         command.append(line.substring(0, line.lastIndexOf(delimiter)));
 
-                        // Reset the delimiter back to the default.
-                        delimiter = DEFAULT_DELIMITER;
-
                         Statement statement = conn.createStatement();
 
                         log.debug(command.toString());
