@@ -9,7 +9,6 @@ import org.apache.maven.plugin.*;
  */
 public class CreateMojo extends AbstractMigrationMojo
 {
-
     public void executeMojo() throws MojoExecutionException
     {
         getLog().info("Creating database " + getUrl() + ".");
