@@ -218,7 +218,6 @@ public class DataSourceMigrationManager implements MigrationManager
 
     private static class PendingMigrationPredicate implements Predicate
     {
-
         private final Set<String> appliedMigrations;
 
         public PendingMigrationPredicate(Set<String> appliedMigrations)
