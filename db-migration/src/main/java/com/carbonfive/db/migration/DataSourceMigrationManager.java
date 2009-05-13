@@ -29,7 +29,7 @@ public class DataSourceMigrationManager implements MigrationManager
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final JdbcTemplate jdbcTemplate;
-    private final DatabaseType dbType;
+    private DatabaseType dbType;
     private VersionStrategy versionStratgey = new SimpleVersionStrategy();
     private MigrationResolver migrationResolver = new ResourceMigrationResolver();
 
