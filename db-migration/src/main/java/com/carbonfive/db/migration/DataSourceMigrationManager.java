@@ -1,24 +1,35 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import org.apache.commons.collections.*;
-import org.apache.commons.lang.time.*;
-import org.slf4j.*;
-import org.springframework.dao.*;
-import org.springframework.jdbc.core.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import com.carbonfive.db.jdbc.DatabaseUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ConnectionCallback;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.*;
-import java.sql.*;
-import java.util.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class DataSourceMigrationManager implements MigrationManager
 {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private JdbcTemplate jdbcTemplate;
-
-    private DatabaseType dbType;
+    private final JdbcTemplate jdbcTemplate;
+    private final DatabaseType dbType;
     private VersionStrategy versionStratgey = new SimpleVersionStrategy();
     private MigrationResolver migrationResolver = new ResourceMigrationResolver();
 
@@ -126,7 +137,7 @@ public class DataSourceMigrationManager implements MigrationManager
                         for (Migration migration : pendingMigrations)
                         {
                             currentMigration = migration;
-                            log.info("Running migration version " + currentMigration.getVersion() + ".");
+                            log.info("Running migration " + currentMigration.getFilename() + ".");
 
                             final Date startTime = new Date();
                             StopWatch migrationWatch = new StopWatch();

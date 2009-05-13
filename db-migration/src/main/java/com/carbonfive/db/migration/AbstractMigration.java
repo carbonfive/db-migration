@@ -1,22 +1,31 @@
 package com.carbonfive.db.migration;
 
-import org.apache.commons.lang.*;
-import org.slf4j.*;
+import org.apache.commons.lang.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractMigration implements Migration
 {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected final String version;
+    protected final String filename;
 
-    protected AbstractMigration(String version)
+    protected AbstractMigration(String version, String filename)
     {
-        Validate.notNull(version);
+        Validate.notEmpty(version);
+        Validate.notEmpty(filename);
         this.version = version;
+        this.filename = filename;
     }
 
     public String getVersion()
     {
         return version;
+    }
+
+    public String getFilename()
+    {
+        return filename;
     }
 
     public int compareTo(Migration o)

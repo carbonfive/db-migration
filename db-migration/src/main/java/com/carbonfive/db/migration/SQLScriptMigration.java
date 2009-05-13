@@ -1,23 +1,25 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import org.apache.commons.io.*;
-import org.apache.commons.lang.*;
-import org.springframework.core.io.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import com.carbonfive.db.jdbc.ScriptRunner;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.Validate;
+import org.springframework.core.io.Resource;
 
-import java.io.*;
-import java.sql.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class SQLScriptMigration extends AbstractMigration
 {
-    private Resource resource;
+    private final Resource script;
 
-    public SQLScriptMigration(String version, Resource resource)
+    public SQLScriptMigration(String version, Resource script)
     {
-        super(version);
-        Validate.isTrue(resource != null);
-
-        this.resource = resource;
+        super(version, script.getFilename());
+        this.script = script;
     }
 
     public void migrate(DatabaseType dbType, Connection connection)
@@ -25,7 +27,7 @@ public class SQLScriptMigration extends AbstractMigration
         InputStream inputStream = null;
         try
         {
-            inputStream = resource.getInputStream();
+            inputStream = script.getInputStream();
             ScriptRunner scriptRunner = new ScriptRunner(dbType);
             scriptRunner.execute(connection, new InputStreamReader(inputStream, "UTF-8"));
             Validate.isTrue(!connection.isClosed(), "JDBC Connection should not be closed.");

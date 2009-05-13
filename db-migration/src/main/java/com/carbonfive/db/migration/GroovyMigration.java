@@ -1,21 +1,24 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import groovy.lang.*;
-import org.apache.commons.io.*;
-import org.apache.commons.lang.*;
-import org.springframework.core.io.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.Validate;
+import org.springframework.core.io.Resource;
 
-import java.io.*;
-import java.sql.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class GroovyMigration extends AbstractMigration
 {
-    final private Resource script;
+    private final Resource script;
 
     public GroovyMigration(String version, Resource script)
     {
-        super(version);
+        super(version, script.getFilename());
         this.script = script;
     }
 
