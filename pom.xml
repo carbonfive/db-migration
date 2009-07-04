@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.carbonfive</groupId>
         <artifactId>c5-parent</artifactId>
-        <version>6</version>
+        <version>7</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.carbonfive</groupId>
+    <groupId>com.carbonfive.db-support</groupId>
     <artifactId>db-support-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.9.8-SNAPSHOT</version>
@@ -42,6 +42,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jdbc.host>localhost</jdbc.host>
 
         <java.source>1.5</java.source>
         <java.target>1.5</java.target>
@@ -109,7 +111,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>3.3.1.GA</version>
+                <version>3.3.2.GA</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -150,8 +152,8 @@
 
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all-minimal</artifactId>
-                <version>1.5.7</version>
+                <artifactId>groovy-all</artifactId>
+                <version>1.6.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -173,6 +175,12 @@
                         <include>**/Abstract*Test.java</include>
                         <include>**/*Test.java</include>
                     </includes>
+                    <systemProperties>
+                        <property>
+                            <name>jdbc.host</name>
+                            <value>${jdbc.host}</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>

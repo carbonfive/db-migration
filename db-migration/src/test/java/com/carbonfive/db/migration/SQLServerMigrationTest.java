@@ -1,17 +1,21 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.schema.*;
-import net.sourceforge.jtds.jdbc.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.text.StringStartsWith.*;
-import org.junit.*;
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
-import org.springframework.jdbc.core.simple.*;
-import org.springframework.jdbc.datasource.*;
+import com.carbonfive.db.jdbc.schema.CreateDatabase;
+import com.carbonfive.db.jdbc.schema.DropDatabase;
+import net.sourceforge.jtds.jdbc.Driver;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.core.Is.is;
+import org.junit.After;
+import static org.junit.Assume.assumeThat;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import javax.sql.*;
-import java.net.*;
+import javax.sql.DataSource;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class SQLServerMigrationTest
 {

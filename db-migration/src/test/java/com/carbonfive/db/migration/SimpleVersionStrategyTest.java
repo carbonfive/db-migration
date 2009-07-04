@@ -1,18 +1,21 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import static org.hamcrest.collection.IsCollectionContaining.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNot.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.springframework.jdbc.core.simple.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 
-import javax.sql.*;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
-import java.util.*;
+import java.util.Set;
 
 public class SimpleVersionStrategyTest
 {
@@ -88,7 +91,7 @@ public class SimpleVersionStrategyTest
 
         connection = dataSource.getConnection();
         Set<String> appliedMigrations = strategy.appliedMigrations(DatabaseType.H2, connection);
-        assertThat(appliedMigrations.size(), is(2));
+        assertThat(appliedMigrations, hasSize(2));
         assertThat(appliedMigrations, hasItems(v1, v2));
         connection.close();
     }
