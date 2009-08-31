@@ -1,13 +1,19 @@
 package com.carbonfive.db.migration;
 
-import org.apache.commons.collections.*;
-import org.slf4j.*;
-import org.springframework.core.io.*;
-import org.springframework.core.io.support.*;
-import static org.springframework.util.StringUtils.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A MigrationResolver which leverages Spring's robust Resource loading mechanism, supporting 'file:', 'classpath:', and standard url format resources.
@@ -45,7 +51,7 @@ public class ResourceMigrationResolver implements MigrationResolver
     public ResourceMigrationResolver(String migrationsLocation, VersionExtractor versionExtractor)
     {
         setMigrationsLocation(migrationsLocation);
-        setVersionExtractor(this.versionExtractor = versionExtractor);
+        setVersionExtractor(versionExtractor);
     }
 
     public Set<Migration> resolve()
@@ -69,7 +75,14 @@ public class ResourceMigrationResolver implements MigrationResolver
         {
             public boolean evaluate(Object object)
             {
-                return !((Resource) object).getFilename().startsWith(".");
+                try
+                {
+                    return !(((Resource) object).getFilename().startsWith(".") || (((Resource) object).getFile().isDirectory()));
+                }
+                catch (IOException e)
+                {
+                    return false;
+                }
             }
         });
 
