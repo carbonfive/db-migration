@@ -1,11 +1,13 @@
 package com.carbonfive.db.migration;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.springframework.jdbc.core.simple.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 
 public class DataSourceMigrationManagerTest
 {

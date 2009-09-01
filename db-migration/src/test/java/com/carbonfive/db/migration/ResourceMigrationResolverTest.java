@@ -1,10 +1,12 @@
 package com.carbonfive.db.migration;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.Set;
 
 public class ResourceMigrationResolverTest
 {
@@ -17,7 +19,7 @@ public class ResourceMigrationResolverTest
         ResourceMigrationResolver resolver = new ResourceMigrationResolver(SINGLE);
         Set<Migration> migrations = resolver.resolve();
         assertNotNull(migrations);
-        assertThat(migrations.size(), is(1));
+        assertThat(migrations, hasSize(1));
     }
 
     @Test
@@ -26,6 +28,31 @@ public class ResourceMigrationResolverTest
         ResourceMigrationResolver resolver = new ResourceMigrationResolver(MULTIPLE);
         Set<Migration> migrations = resolver.resolve();
         assertNotNull(migrations);
-        assertThat(migrations.size(), is(3));
+        assertThat(migrations, hasSize(3));
+    }
+
+    @Test
+    public void testSpringifyingMigrationsLocation()
+    {
+        // Append Trailing slash and wildcard.
+        assertThat(convert("src/migrations"), is("file:src/migrations/*"));
+        assertThat(convert("src/migrations/"), is("file:src/migrations/*"));
+
+        // Explicit inclusion of spring prefixes.
+        assertThat(convert("file:src/migrations"), is("file:src/migrations/*"));
+        assertThat(convert("classpath:com/acme"), is("classpath:com/acme/*"));
+        assertThat(convert("classpath:com/acme/"), is("classpath:com/acme/*"));
+        assertThat(convert("classpath:/com/acme"), is("classpath:/com/acme/*"));
+        //assertThat(convert("classpath*:/com/acme"), is("classpath*:/com/acme/*"));
+
+        // Wildcards and filename filters.
+        assertThat(convert("src/migrations/*.sql"), is("file:src/migrations/*.sql"));
+        assertThat(convert("src/migrations/patch-*.sql"), is("file:src/migrations/patch-*.sql"));
+        assertThat(convert("src/migrations/**/patch-*.sql"), is("file:src/migrations/**/patch-*.sql"));
+    }
+
+    private String convert(String location)
+    {
+        return new ResourceMigrationResolver("").convertMigrationsLocation(location);
     }
 }

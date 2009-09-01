@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.carbonfive</groupId>
         <artifactId>c5-parent</artifactId>
-        <version>7</version>
+        <version>8</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -154,6 +154,12 @@
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
                 <version>1.6.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

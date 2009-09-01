@@ -1,16 +1,19 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.schema.*;
-import static org.hamcrest.core.Is.*;
-import org.junit.*;
-import static org.junit.Assert.*;
-import org.postgresql.*;
-import org.springframework.jdbc.core.simple.*;
-import org.springframework.jdbc.datasource.*;
+import com.carbonfive.db.jdbc.schema.CreateDatabase;
+import com.carbonfive.db.jdbc.schema.DropDatabase;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.postgresql.Driver;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 import static java.lang.String.format;
-import static java.lang.System.*;
+import static java.lang.System.getProperty;
 
 public class PostgreSQLMigrationTest
 {

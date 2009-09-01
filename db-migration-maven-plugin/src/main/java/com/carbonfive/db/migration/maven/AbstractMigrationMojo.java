@@ -1,12 +1,16 @@
 package com.carbonfive.db.migration.maven;
 
-import com.carbonfive.db.jdbc.*;
-import com.carbonfive.db.migration.*;
-import org.apache.commons.io.*;
-import static org.apache.commons.lang.StringUtils.*;
-import org.apache.maven.plugin.*;
-import org.apache.maven.project.*;
-import org.springframework.util.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import com.carbonfive.db.jdbc.DatabaseUtils;
+import com.carbonfive.db.migration.DriverManagerMigrationManager;
+import com.carbonfive.db.migration.ResourceMigrationResolver;
+import com.carbonfive.db.migration.SimpleVersionStrategy;
+import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang.StringUtils.isBlank;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.springframework.util.StringUtils;
 
 public abstract class AbstractMigrationMojo extends AbstractMojo
 {
@@ -131,11 +135,6 @@ public abstract class AbstractMigrationMojo extends AbstractMojo
     public DriverManagerMigrationManager createMigrationManager()
     {
         DriverManagerMigrationManager manager = new DriverManagerMigrationManager(driver, url, username, password, DatabaseType.valueOf(databaseType));
-
-        if (!(migrationsPath.startsWith("/") || migrationsPath.startsWith("\"")))
-        {
-            migrationsPath = "file:" + FilenameUtils.separatorsToUnix(project.getBasedir().getAbsolutePath() + "/" + migrationsPath);
-        }
 
         manager.setMigrationResolver(new ResourceMigrationResolver(migrationsPath));
 

@@ -1,8 +1,8 @@
 package com.carbonfive.db.migration;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import org.junit.Test;
 
 public class SimpleVersionExtractorTest
 {

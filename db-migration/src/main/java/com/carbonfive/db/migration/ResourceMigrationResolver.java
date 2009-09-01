@@ -2,6 +2,8 @@ package com.carbonfive.db.migration;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.io.FilenameUtils;
+import static org.apache.commons.lang.StringUtils.isBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -59,11 +61,13 @@ public class ResourceMigrationResolver implements MigrationResolver
         Set<Migration> migrations = new HashSet<Migration>();
 
         // Find all resources in the migrations location.
+        String convertedMigrationsLocation = convertMigrationsLocation(migrationsLocation);
+
         PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
         List<Resource> resources;
         try
         {
-            resources = new ArrayList<Resource>(Arrays.asList(patternResolver.getResources(migrationsLocation)));
+            resources = new ArrayList<Resource>(Arrays.asList(patternResolver.getResources(convertedMigrationsLocation)));
         }
         catch (IOException e)
         {
@@ -108,13 +112,30 @@ public class ResourceMigrationResolver implements MigrationResolver
         return migrations;
     }
 
-    public void setMigrationsLocation(String migrationsLocation)
+    String convertMigrationsLocation(String migrationsLocation)
     {
-        if (!migrationsLocation.endsWith("*"))
+        String converted = migrationsLocation;
+
+        if (!(isBlank(FilenameUtils.getName(converted)) || FilenameUtils.getName(converted).contains("*")))
         {
-            migrationsLocation += "*";
+            converted += "/";
         }
 
+        if (!FilenameUtils.getName(converted).contains("*"))
+        {
+            converted += "*";
+        }
+
+        if (!(converted.startsWith("file:") || converted.startsWith("classpath:")))
+        {
+            converted = "file:" + converted;
+        }
+
+        return converted;
+    }
+
+    public void setMigrationsLocation(String migrationsLocation)
+    {
         this.migrationsLocation = migrationsLocation;
     }
 

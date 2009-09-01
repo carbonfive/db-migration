@@ -1,14 +1,16 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.springframework.core.io.*;
-import org.springframework.jdbc.core.simple.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import javax.sql.*;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 public class GroovyMigrationTest
 {

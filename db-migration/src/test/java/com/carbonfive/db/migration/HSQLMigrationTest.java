@@ -1,13 +1,14 @@
 package com.carbonfive.db.migration;
 
-import static org.hamcrest.core.Is.*;
-import org.hsqldb.*;
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.springframework.jdbc.core.simple.*;
-import org.springframework.jdbc.datasource.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import org.hsqldb.jdbcDriver;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 
 public class HSQLMigrationTest
 {

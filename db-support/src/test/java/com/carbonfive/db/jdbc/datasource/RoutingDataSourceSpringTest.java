@@ -1,17 +1,20 @@
 package com.carbonfive.db.jdbc.datasource;
 
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runner.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.jdbc.core.*;
-import org.springframework.jdbc.core.simple.*;
-import org.springframework.jdbc.datasource.*;
-import org.springframework.test.context.*;
-import org.springframework.test.context.junit4.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -47,7 +50,7 @@ public class RoutingDataSourceSpringTest
             contextService.setCurrentClient(dataSourceName);
             SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
             String name = jdbcTemplate.queryForObject("select name from db_name", String.class, Collections.EMPTY_MAP);
-            assertEquals(dataSourceName, name);
+            assertThat(name, is(dataSourceName));
         }
     }
 }
