@@ -5,8 +5,10 @@ import com.carbonfive.db.jdbc.DatabaseUtils;
 import com.carbonfive.db.migration.DriverManagerMigrationManager;
 import com.carbonfive.db.migration.ResourceMigrationResolver;
 import com.carbonfive.db.migration.SimpleVersionStrategy;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.substring;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -20,56 +22,32 @@ public abstract class AbstractMigrationMojo extends AbstractMojo
      */
     protected MavenProject project;
 
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String url;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String driver;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String username;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String password = "";
 
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String databaseType;
 
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String migrationsPath = "src/main/db/migrations/";
 
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String versionTable;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String versionColumn;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String appliedDateColumn;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String durationColumn;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String createSql;
-    /**
-     * @parameter
-     */
+    /** @parameter */
     private String dropSql;
 
     public abstract void executeMojo() throws MojoExecutionException;
@@ -136,7 +114,19 @@ public abstract class AbstractMigrationMojo extends AbstractMojo
     {
         DriverManagerMigrationManager manager = new DriverManagerMigrationManager(driver, url, username, password, DatabaseType.valueOf(databaseType));
 
-        manager.setMigrationResolver(new ResourceMigrationResolver(migrationsPath));
+        String path = migrationsPath;
+
+        if (path.startsWith("file:"))
+        {
+            path = substring(path, 5);
+        }
+        if (!path.startsWith("classpath:") && !path.startsWith("\"") && !path.startsWith("/"))
+        {
+            path = project.getBasedir().getAbsolutePath() + "/" + path;
+        }
+        path = separatorsToUnix(path);
+
+        manager.setMigrationResolver(new ResourceMigrationResolver(path));
 
         SimpleVersionStrategy strategy = new SimpleVersionStrategy();
         strategy.setVersionTable(defaultIfEmpty(versionTable, SimpleVersionStrategy.DEFAULT_VERSION_TABLE));
