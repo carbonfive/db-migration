@@ -1,9 +1,10 @@
 package com.carbonfive.db.migration.maven;
 
-import com.carbonfive.db.migration.*;
-import org.apache.maven.plugin.*;
+import com.carbonfive.db.migration.Migration;
+import com.carbonfive.db.migration.MigrationManager;
+import org.apache.maven.plugin.MojoExecutionException;
 
-import java.util.*;
+import java.util.SortedSet;
 
 /**
  * Validate current schema against available migrations.
@@ -20,10 +21,27 @@ public class ValidateMojo extends AbstractMigrationMojo
         try
         {
             MigrationManager manager = createMigrationManager();
-            SortedSet<String> pendingMigrations = manager.pendingMigrations();
-            getLog().info("\n             Database: " + getUrl() +
-                          "\n           Up-to-date: " + pendingMigrations.isEmpty() +
-                          "\n   Pending Migrations: " + pendingMigrations);
+            SortedSet<Migration> pendingMigrations = manager.pendingMigrations();
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n            Database: ").append(getUrl());
+            sb.append("\n          Up-to-date: ").append(pendingMigrations.isEmpty());
+            sb.append("\n  Pending Migrations: ");
+
+            if (!pendingMigrations.isEmpty())
+            {
+                boolean first = true;
+                for (Migration migration : pendingMigrations)
+                {
+                    if (!first)
+                    {
+                        sb.append("\n                      ");
+                    }
+                    first = false;
+                    sb.append(migration.getFilename());
+                }
+            }
+
+            getLog().info(sb.toString());
         }
         catch (Exception e)
         {

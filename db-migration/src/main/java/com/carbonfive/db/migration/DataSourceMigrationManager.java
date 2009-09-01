@@ -4,7 +4,6 @@ import com.carbonfive.db.jdbc.DatabaseType;
 import com.carbonfive.db.jdbc.DatabaseUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
@@ -72,19 +71,12 @@ public class DataSourceMigrationManager implements MigrationManager
         return pendingMigrations().isEmpty();
     }
 
-    public SortedSet<String> pendingMigrations()
+    public SortedSet<Migration> pendingMigrations()
     {
         Set<String> appliedMigrations = determineAppliedMigrationVersions();
         Set<Migration> availableMigrations = migrationResolver.resolve();
-        CollectionUtils.transform(availableMigrations, new Transformer()
-        {
-            public Object transform(Object o)
-            {
-                return ((Migration) o).getVersion();
-            }
-        });
 
-        SortedSet<String> pendingMigrations = new TreeSet<String>();
+        SortedSet<Migration> pendingMigrations = new TreeSet<Migration>();
         CollectionUtils.select(availableMigrations, new PendingMigrationPredicate(appliedMigrations), pendingMigrations);
 
         return pendingMigrations;

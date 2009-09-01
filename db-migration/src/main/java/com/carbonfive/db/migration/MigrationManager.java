@@ -1,6 +1,6 @@
 package com.carbonfive.db.migration;
 
-import java.util.*;
+import java.util.SortedSet;
 
 public interface MigrationManager
 {
@@ -12,11 +12,11 @@ public interface MigrationManager
     boolean validate();
 
     /**
-     * Returns a sorted set of pending migration versions, in the order that they would be run if a migration was performed.
+     * Returns a sorted set of pending migrations, in the order that they would be run if a migration was performed.
      *
-     * @return a sorted set of pending migration versions, or an empty set if there are none pending
+     * @return a sorted set of pending migrations, or an empty set if there are none pending
      */
-    SortedSet<String> pendingMigrations();
+    SortedSet<Migration> pendingMigrations();
 
     /**
      * Migrates the database to the latest version, enabling migrations if necessary.
