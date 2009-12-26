@@ -1,14 +1,18 @@
 package com.carbonfive.db.migration;
 
-import com.carbonfive.db.jdbc.*;
-import static com.carbonfive.db.jdbc.DatabaseType.*;
-import org.apache.commons.collections.map.*;
-import org.slf4j.*;
+import com.carbonfive.db.jdbc.DatabaseType;
+import org.apache.commons.collections.map.DefaultedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static java.lang.String.*;
 import java.sql.*;
 import java.util.Date;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.carbonfive.db.jdbc.DatabaseType.HSQL;
+import static com.carbonfive.db.jdbc.DatabaseType.SQL_SERVER;
+import static java.lang.String.format;
 
 /**
  * A trivial VersionStrategy which tracks only the minimal information required to note the current state of the database: the current version.
@@ -20,7 +24,7 @@ public class SimpleVersionStrategy implements VersionStrategy
     public static final String DEFAULT_APPLIED_DATE_COLUMN = "applied_on";
     public static final String DEFAULT_DURATION_COLUMN = "duration";
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String versionTable = DEFAULT_VERSION_TABLE;
     private String versionColumn = DEFAULT_VERSION_COLUMN;

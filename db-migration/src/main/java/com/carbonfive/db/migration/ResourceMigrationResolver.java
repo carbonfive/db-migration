@@ -3,19 +3,16 @@ package com.carbonfive.db.migration;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.FilenameUtils;
-import static org.apache.commons.lang.StringUtils.isBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 /**
  * A MigrationResolver which leverages Spring's robust Resource loading mechanism, supporting 'file:', 'classpath:', and standard url format resources.
@@ -34,7 +31,7 @@ public class ResourceMigrationResolver implements MigrationResolver
 {
     private static final String CLASSPATH_MIGRATIONS_SQL = "classpath:/db/migrations/";
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String migrationsLocation;
     private VersionExtractor versionExtractor;
@@ -93,13 +90,13 @@ public class ResourceMigrationResolver implements MigrationResolver
         if (resources.isEmpty())
         {
             String message = "No migrations were found using resource pattern '" + migrationsLocation + "'. Terminating migration.";
-            log.error(message);
+            logger.error(message);
             throw new MigrationException(message);
         }
 
-        if (log.isDebugEnabled())
+        if (logger.isDebugEnabled())
         {
-            log.debug("Found " + resources.size() + " resources: " + collectionToCommaDelimitedString(resources));
+            logger.debug("Found " + resources.size() + " resources: " + collectionToCommaDelimitedString(resources));
         }
 
         // Extract versions and create executable migrations for each resource.

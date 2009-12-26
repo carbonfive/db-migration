@@ -15,17 +15,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class DataSourceMigrationManager implements MigrationManager
 {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final JdbcTemplate jdbcTemplate;
     private DatabaseType dbType;
@@ -57,11 +51,11 @@ public class DataSourceMigrationManager implements MigrationManager
                 }
             });
 
-            log.info("Successfully enabled migrations.");
+            logger.info("Successfully enabled migrations.");
         }
         catch (DataAccessException e)
         {
-            log.error("Could not enable migrations.", e);
+            logger.error("Could not enable migrations.", e);
             throw new MigrationException(e);
         }
     }
@@ -102,7 +96,7 @@ public class DataSourceMigrationManager implements MigrationManager
 
         if (pendingMigrations.isEmpty())
         {
-            log.info("Database is up to date; no migration necessary.");
+            logger.info("Database is up to date; no migration necessary.");
             return;
         }
 
@@ -110,7 +104,7 @@ public class DataSourceMigrationManager implements MigrationManager
         StopWatch watch = new StopWatch();
         watch.start();
 
-        log.info("Migrating database... applying " + pendingMigrations.size() + " migration" + (pendingMigrations.size() > 1 ? "s" : "") + ".");
+        logger.info("Migrating database... applying " + pendingMigrations.size() + " migration" + (pendingMigrations.size() > 1 ? "s" : "") + ".");
 
         try
         {
@@ -129,7 +123,7 @@ public class DataSourceMigrationManager implements MigrationManager
                         for (Migration migration : pendingMigrations)
                         {
                             currentMigration = migration;
-                            log.info("Running migration " + currentMigration.getFilename() + ".");
+                            logger.info("Running migration " + currentMigration.getFilename() + ".");
 
                             final Date startTime = new Date();
                             StopWatch migrationWatch = new StopWatch();
@@ -147,7 +141,7 @@ public class DataSourceMigrationManager implements MigrationManager
                     {
                         assert currentMigration != null;
                         String message = "Migration for version " + currentMigration.getVersion() + " failed, rolling back and terminating migration.";
-                        log.error(message, e);
+                        logger.error(message, e);
                         connection.rollback();
                         throw new MigrationException(message, e);
                     }
@@ -162,13 +156,13 @@ public class DataSourceMigrationManager implements MigrationManager
         }
         catch (DataAccessException e)
         {
-            log.error("Failed to migrate database.", e);
+            logger.error("Failed to migrate database.", e);
             throw new MigrationException(e);
         }
 
         watch.stop();
 
-        log.info("Migrated database in " + DurationFormatUtils.formatDurationHMS(watch.getTime()) + ".");
+        logger.info("Migrated database in " + DurationFormatUtils.formatDurationHMS(watch.getTime()) + ".");
     }
 
     public void setDatabaseType(DatabaseType dbType)

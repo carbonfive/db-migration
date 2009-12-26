@@ -1,12 +1,14 @@
 package com.carbonfive.db.jdbc;
 
-import com.mockrunner.mock.jdbc.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.*;
-import org.junit.*;
+import com.mockrunner.mock.jdbc.MockConnection;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
 
 public class ScriptRunnerImplTest
 {
@@ -60,5 +62,22 @@ public class ScriptRunnerImplTest
                    is(equalToIgnoringWhiteSpace("CREATE FUNCTION simpleFunction() RETURNS varchar(100) READS SQL DATA begin declare message varchar(100) default 'Hello Word'; return message; end")));
         assertThat(connection.getStatementResultSetHandler().getExecutedStatements().get(2).toString(),
                    is(equalToIgnoringWhiteSpace("select simpleFunction()")));
+    }
+
+    @Test
+    public void scriptRunnerShouldExecuteLastStatementWhenDelimiterIsMissing() throws Exception
+    {
+        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        Reader reader = new InputStreamReader(getClass().getResourceAsStream("missing-last-deliminator.sql"));
+        MockConnection connection = new MockConnection();
+
+        runner.execute(connection, reader);
+
+        assertThat(connection.getStatementResultSetHandler().getExecutedStatements().size(), is(2));
+        assertThat(connection.getStatementResultSetHandler().getExecutedStatements().get(0).toString(),
+                   is(equalToIgnoringWhiteSpace("create table users ( username varchar not null, password varchar not null )")));
+        assertThat(connection.getStatementResultSetHandler().getExecutedStatements().get(1).toString(),
+                   is(equalToIgnoringWhiteSpace("create table roles ( name varchar not null unique, description text not null )")));
+
     }
 }

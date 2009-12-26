@@ -1,14 +1,15 @@
 package com.carbonfive.db.jdbc.datasource;
 
-import com.mchange.v2.c3p0.*;
-import org.slf4j.*;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.sql.*;
-import java.beans.*;
+import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 
 public class C3P0DataSourceFactory implements DataSourceFactory
 {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String driver;
     private String url;
@@ -58,7 +59,7 @@ public class C3P0DataSourceFactory implements DataSourceFactory
         catch (PropertyVetoException e)
         {
             String msg = "Could not create data source with driver class '" + driver + "' for '" + databaseName + "'.";
-            log.error(msg, e);
+            logger.error(msg, e);
             throw new DataSourceCreationException(msg, e);
         }
         dataSource.setJdbcUrl(url + databaseName);

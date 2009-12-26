@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractMigration implements Migration
 {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     protected final String version;
     protected final String filename;
 
