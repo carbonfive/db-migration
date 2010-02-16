@@ -5,14 +5,13 @@ import com.carbonfive.db.jdbc.DatabaseUtils;
 import com.carbonfive.db.migration.DriverManagerMigrationManager;
 import com.carbonfive.db.migration.ResourceMigrationResolver;
 import com.carbonfive.db.migration.SimpleVersionStrategy;
-import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.substring;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.springframework.util.StringUtils;
+
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
+import static org.apache.commons.lang.StringUtils.*;
 
 public abstract class AbstractMigrationMojo extends AbstractMojo
 {
@@ -133,7 +132,7 @@ public abstract class AbstractMigrationMojo extends AbstractMojo
         strategy.setVersionColumn(defaultIfEmpty(versionColumn, SimpleVersionStrategy.DEFAULT_VERSION_COLUMN));
         strategy.setAppliedDateColumn(defaultIfEmpty(appliedDateColumn, SimpleVersionStrategy.DEFAULT_APPLIED_DATE_COLUMN));
         strategy.setDurationColumn(defaultIfEmpty(durationColumn, SimpleVersionStrategy.DEFAULT_DURATION_COLUMN));
-        manager.setVersionStratgey(strategy);
+        manager.setVersionStrategy(strategy);
 
         return manager;
     }

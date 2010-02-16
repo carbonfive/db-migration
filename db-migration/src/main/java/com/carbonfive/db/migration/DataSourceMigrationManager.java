@@ -23,7 +23,7 @@ public class DataSourceMigrationManager implements MigrationManager
 
     private final JdbcTemplate jdbcTemplate;
     private DatabaseType dbType;
-    private VersionStrategy versionStratgey = new SimpleVersionStrategy();
+    private VersionStrategy versionStrategy = new SimpleVersionStrategy();
     private MigrationResolver migrationResolver = new ResourceMigrationResolver();
 
     public DataSourceMigrationManager(DataSource dataSource)
@@ -46,7 +46,7 @@ public class DataSourceMigrationManager implements MigrationManager
             {
                 public Object doInConnection(Connection connection) throws SQLException, DataAccessException
                 {
-                    versionStratgey.enableVersioning(dbType, connection);
+                    versionStrategy.enableVersioning(dbType, connection);
                     return null;
                 }
             });
@@ -130,7 +130,7 @@ public class DataSourceMigrationManager implements MigrationManager
                             migrationWatch.start();
 
                             currentMigration.migrate(dbType, connection);
-                            versionStratgey.recordMigration(dbType, connection, currentMigration.getVersion(), startTime, migrationWatch.getTime());
+                            versionStrategy.recordMigration(dbType, connection, currentMigration.getVersion(), startTime, migrationWatch.getTime());
 
                             connection.commit();
 
@@ -175,9 +175,9 @@ public class DataSourceMigrationManager implements MigrationManager
         this.migrationResolver = migrationResolver;
     }
 
-    public void setVersionStratgey(VersionStrategy versionStratgey)
+    public void setVersionStrategy(VersionStrategy versionStrategy)
     {
-        this.versionStratgey = versionStratgey;
+        this.versionStrategy = versionStrategy;
     }
 
     private DatabaseType determineDatabaseType()
@@ -197,7 +197,7 @@ public class DataSourceMigrationManager implements MigrationManager
         {
             public Object doInConnection(Connection connection) throws SQLException, DataAccessException
             {
-                return versionStratgey.appliedMigrations(dbType, connection);
+                return versionStrategy.appliedMigrations(dbType, connection);
             }
         });
     }
