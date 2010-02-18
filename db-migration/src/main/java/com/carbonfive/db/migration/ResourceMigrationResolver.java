@@ -1,5 +1,6 @@
 package com.carbonfive.db.migration;
 
+import com.carbonfive.db.jdbc.DatabaseType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.FilenameUtils;
@@ -53,7 +54,7 @@ public class ResourceMigrationResolver implements MigrationResolver
         setVersionExtractor(versionExtractor);
     }
 
-    public Set<Migration> resolve()
+    public Set<Migration> resolve(DatabaseType dbType)
     {
         Set<Migration> migrations = new HashSet<Migration>();
 
@@ -107,6 +108,11 @@ public class ResourceMigrationResolver implements MigrationResolver
         }
 
         return migrations;
+    }
+
+    public Set<Migration> resolve()
+    {
+        return resolve(DatabaseType.UNKNOWN);
     }
 
     String convertMigrationsLocation(String migrationsLocation)

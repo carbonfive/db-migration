@@ -68,7 +68,7 @@ public class DataSourceMigrationManager implements MigrationManager
     public SortedSet<Migration> pendingMigrations()
     {
         Set<String> appliedMigrations = determineAppliedMigrationVersions();
-        Set<Migration> availableMigrations = migrationResolver.resolve();
+        Set<Migration> availableMigrations = migrationResolver.resolve(dbType);
 
         SortedSet<Migration> pendingMigrations = new TreeSet<Migration>();
         CollectionUtils.select(availableMigrations, new PendingMigrationPredicate(appliedMigrations), pendingMigrations);
@@ -86,7 +86,7 @@ public class DataSourceMigrationManager implements MigrationManager
             appliedMigrations = Collections.EMPTY_SET;
         }
 
-        Set<Migration> availableMigrations = migrationResolver.resolve();
+        Set<Migration> availableMigrations = migrationResolver.resolve(dbType);
 
         // Which migrations need to be applied (ie: are pending)?
         // TODO This seems like something that could be in its own method.

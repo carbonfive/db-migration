@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>com.carbonfive</groupId>
@@ -14,7 +15,8 @@
     <name>Carbon Five Database Support Parent</name>
     <url>http://www.carbonfive.com</url>
 
-    <description>Carbon Five Database Support is a collection of miscellaneous classes which provide additional database utility.</description>
+    <description>Carbon Five Database Support is a collection of miscellaneous classes which provide additional database utility.
+    </description>
 
     <licenses>
         <license>

@@ -1,12 +1,14 @@
 package com.carbonfive.db.migration;
 
+import com.carbonfive.db.jdbc.DatabaseType;
+import org.junit.Test;
+
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
-
-import java.util.Set;
 
 public class ResourceMigrationResolverTest
 {
@@ -17,7 +19,7 @@ public class ResourceMigrationResolverTest
     public void testResolveMigrationsSet1()
     {
         ResourceMigrationResolver resolver = new ResourceMigrationResolver(SINGLE);
-        Set<Migration> migrations = resolver.resolve();
+        Set<Migration> migrations = resolver.resolve(DatabaseType.UNKNOWN);
         assertNotNull(migrations);
         assertThat(migrations, hasSize(1));
     }
@@ -26,7 +28,7 @@ public class ResourceMigrationResolverTest
     public void testResolveMigrationsSet2()
     {
         ResourceMigrationResolver resolver = new ResourceMigrationResolver(MULTIPLE);
-        Set<Migration> migrations = resolver.resolve();
+        Set<Migration> migrations = resolver.resolve(DatabaseType.UNKNOWN);
         assertNotNull(migrations);
         assertThat(migrations, hasSize(3));
     }
