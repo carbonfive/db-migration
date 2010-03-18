@@ -1,7 +1,6 @@
 package com.carbonfive.db.jdbc;
 
 import com.mockrunner.mock.jdbc.MockConnection;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
@@ -17,7 +16,7 @@ public class ScriptRunnerImplTest
     @Test
     public void scriptRunnerShouldBatchSimpleCommands() throws Exception
     {
-        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        ScriptRunner runner = new ScriptRunner(DatabaseType.UNKNOWN);
         Reader reader = new InputStreamReader(getClass().getResourceAsStream("simple.sql"));
         MockConnection connection = new MockConnection();
 
@@ -35,7 +34,7 @@ public class ScriptRunnerImplTest
     @Test
     public void scriptRunnerShouldBatchMySQLFunctionsAndProcedures() throws Exception
     {
-        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        ScriptRunner runner = new ScriptRunner(DatabaseType.MYSQL);
         Reader reader = new InputStreamReader(getClass().getResourceAsStream("stored-procedure-mysql.sql"));
         MockConnection connection = new MockConnection();
 
@@ -53,10 +52,9 @@ public class ScriptRunnerImplTest
     }
 
     @Test
-    @Ignore
     public void scriptRunnerShouldBatchPostgresFunctionsAndProcedures() throws Exception
     {
-        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        ScriptRunner runner = new ScriptRunner(DatabaseType.POSTGRESQL);
         Reader reader = new InputStreamReader(getClass().getResourceAsStream("stored-procedure-postgresql.sql"));
         MockConnection connection = new MockConnection();
 
@@ -66,9 +64,9 @@ public class ScriptRunnerImplTest
 
         assertThat(statements.size(), is(4));
         assertThat(statements.get(0).toString(),
-                is(equalToIgnoringWhiteSpace("CREATE FUNCTION getQtyOrders(customerID int) RETURNS int AS $$ DECLARE qty int; BEGIN SELECT COUNT(*) INTO qty  FROM Orders WHERE accnum = customerID; RETURN qty; END; $$ LANGUAGE plpgsql")));
+                is(equalToIgnoringWhiteSpace("CREATE FUNCTION getQtyOrders(customerID int) RETURNS int AS $$ DECLARE qty int; BEGIN SELECT COUNT(*) INTO qty FROM Orders WHERE accnum = customerID; RETURN qty; END; $$ LANGUAGE plpgsql")));
         assertThat(statements.get(1).toString(),
-                is(equalToIgnoringWhiteSpace("CREATE FUNCTION one() RETURNS integer AS 'SELECT 1 AS result;' LANGUAGE SQL")));
+                is(equalToIgnoringWhiteSpace("CREATE FUNCTION one() RETURNS integer AS ' SELECT 1 AS result; ' LANGUAGE SQL")));
         assertThat(statements.get(2).toString(),
                 is(equalToIgnoringWhiteSpace("CREATE FUNCTION emp_stamp() RETURNS trigger AS $emp_stamp$ BEGIN IF NEW.empname IS NULL THEN RAISE EXCEPTION 'empname cannot be null'; END IF; IF NEW.salary IS NULL THEN RAISE EXCEPTION '% cannot have null salary', NEW.empname; END IF; IF NEW.salary < 0 THEN RAISE EXCEPTION '% cannot have a negative salary', NEW.empname; END IF; NEW.last_date := current_timestamp; NEW.last_user := current_user; RETURN NEW; END; $emp_stamp$ LANGUAGE plpgsql")));
         assertThat(statements.get(3).toString(),
@@ -78,7 +76,7 @@ public class ScriptRunnerImplTest
     @Test
     public void scriptRunnerShouldUseTheSameDelimiterUntilExplicitlyChanged() throws Exception
     {
-        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        ScriptRunner runner = new ScriptRunner(DatabaseType.UNKNOWN);
         Reader reader = new InputStreamReader(getClass().getResourceAsStream("function-mysql.sql"));
         MockConnection connection = new MockConnection();
 
@@ -98,7 +96,7 @@ public class ScriptRunnerImplTest
     @Test
     public void scriptRunnerShouldExecuteLastStatementWhenDelimiterIsMissing() throws Exception
     {
-        ScriptRunnerImpl runner = new ScriptRunnerImpl();
+        ScriptRunner runner = new ScriptRunner(DatabaseType.UNKNOWN);
         Reader reader = new InputStreamReader(getClass().getResourceAsStream("missing-last-deliminator.sql"));
         MockConnection connection = new MockConnection();
 

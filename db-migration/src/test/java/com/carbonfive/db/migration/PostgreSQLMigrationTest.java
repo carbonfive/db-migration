@@ -2,8 +2,6 @@ package com.carbonfive.db.migration;
 
 import com.carbonfive.db.jdbc.schema.CreateDatabase;
 import com.carbonfive.db.jdbc.schema.DropDatabase;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +10,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
+
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class PostgreSQLMigrationTest
 {
@@ -47,6 +48,6 @@ public class PostgreSQLMigrationTest
     {
         migrationManager.migrate();
 
-        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(1));
+        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(2));
     }
 }
