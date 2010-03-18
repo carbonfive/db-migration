@@ -28,13 +28,13 @@ public class DataSourceMigrationManager implements MigrationManager
 
     public DataSourceMigrationManager(DataSource dataSource)
     {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this(dataSource, DatabaseType.UNKNOWN);
         this.dbType = determineDatabaseType();
     }
 
     public DataSourceMigrationManager(DataSource dataSource, DatabaseType dbType)
     {
-        this(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.dbType = dbType;
     }
 
