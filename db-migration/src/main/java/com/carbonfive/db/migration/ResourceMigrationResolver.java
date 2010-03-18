@@ -79,10 +79,14 @@ public class ResourceMigrationResolver implements MigrationResolver
             {
                 try
                 {
-                    return !(((Resource) object).getFilename().startsWith(".") || (((Resource) object).getFile().isDirectory()));
+                    return (((Resource) object).isReadable() && !((Resource) object).getFilename().startsWith("."));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Exception while filtering resource.", e);
+                    }
                     return false;
                 }
             }
