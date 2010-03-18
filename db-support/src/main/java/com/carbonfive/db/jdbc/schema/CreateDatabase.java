@@ -1,15 +1,10 @@
 package com.carbonfive.db.jdbc.schema;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class CreateDatabase extends AbstractSchemaCommand
 {
     public static final String CREATE_DATABASE_SQL = "create database %s";
-
-    private String driver;
-    private String url;
-    private String username;
-    private String password;
 
     public CreateDatabase(String url, String username, String password)
     {
