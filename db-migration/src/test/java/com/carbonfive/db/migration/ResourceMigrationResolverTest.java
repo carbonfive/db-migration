@@ -55,6 +55,6 @@ public class ResourceMigrationResolverTest
 
     private String convert(String location)
     {
-        return new ResourceMigrationResolver("").convertMigrationsLocation(location);
+        return new ResourceMigrationResolver("").convertMigrationsLocation(location, DatabaseType.UNKNOWN);
     }
 }
