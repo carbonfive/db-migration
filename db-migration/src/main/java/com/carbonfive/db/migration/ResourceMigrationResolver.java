@@ -59,7 +59,7 @@ public class ResourceMigrationResolver implements MigrationResolver
         Set<Migration> migrations = new HashSet<Migration>();
 
         // Find all resources in the migrations location.
-        String convertedMigrationsLocation = convertMigrationsLocation(migrationsLocation);
+        String convertedMigrationsLocation = convertMigrationsLocation(migrationsLocation, dbType);
 
         PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
         List<Resource> resources;
@@ -119,7 +119,7 @@ public class ResourceMigrationResolver implements MigrationResolver
         return resolve(DatabaseType.UNKNOWN);
     }
 
-    String convertMigrationsLocation(String migrationsLocation)
+    protected String convertMigrationsLocation(String migrationsLocation, DatabaseType dbType)
     {
         String converted = migrationsLocation;
 
