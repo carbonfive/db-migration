@@ -1,9 +1,10 @@
 package com.carbonfive.db.migration;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Assumes the filename, minus the extension, is the migration version.
+ * Assumes the filename, minus the extension and non-numeric text, is the migration version.
  * <p/>
  * Examples: <ul><li>20080518134512_create_foo.sql -> 20080518134512</li><li>20080718214051_add_foo_name.sql -> 20080718214051</li><li>012_create_bar.sql ->
  * 012</li></ul>

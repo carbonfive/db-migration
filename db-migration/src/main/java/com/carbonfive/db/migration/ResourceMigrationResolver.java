@@ -94,7 +94,7 @@ public class ResourceMigrationResolver implements MigrationResolver
 
         if (resources.isEmpty())
         {
-            String message = "No migrations were found using resource pattern '" + migrationsLocation + "'. Terminating migration.";
+            String message = "No migrations were found using resource pattern '" + migrationsLocation + "'.";
             logger.error(message);
             throw new MigrationException(message);
         }

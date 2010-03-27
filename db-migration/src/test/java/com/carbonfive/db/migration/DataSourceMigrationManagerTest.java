@@ -1,13 +1,14 @@
 package com.carbonfive.db.migration;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
 
 public class DataSourceMigrationManagerTest
 {
@@ -72,19 +73,11 @@ public class DataSourceMigrationManagerTest
         assertThat(migrationManager.pendingMigrations().size(), is(3));
     }
 
-    @Test
+    @Test(expected = MigrationException.class)
     public void migrateShouldCatchDuplicateMigrationVersions()
     {
         migrationManager.setMigrationResolver(new ResourceMigrationResolver(DUPLICATE));
-
-        try
-        {
-            migrationManager.migrate();
-            fail("Should have thrown an exception reporting an incorrect number of migrations.");
-        }
-        catch (Exception e)
-        {
-        }
+        migrationManager.migrate();
     }
 
     @Test

@@ -38,28 +38,6 @@ public class DataSourceMigrationManager implements MigrationManager
         this.dbType = dbType;
     }
 
-    protected void enableMigrations()
-    {
-        try
-        {
-            jdbcTemplate.execute(new ConnectionCallback()
-            {
-                public Object doInConnection(Connection connection) throws SQLException, DataAccessException
-                {
-                    versionStrategy.enableVersioning(dbType, connection);
-                    return null;
-                }
-            });
-
-            logger.info("Successfully enabled migrations.");
-        }
-        catch (DataAccessException e)
-        {
-            logger.error("Could not enable migrations.", e);
-            throw new MigrationException(e);
-        }
-    }
-
     public boolean validate()
     {
         return pendingMigrations().isEmpty();
@@ -78,21 +56,13 @@ public class DataSourceMigrationManager implements MigrationManager
 
     public void migrate()
     {
-        Set<String> appliedMigrations = determineAppliedMigrationVersions();
-
-        if (appliedMigrations == null)
+        // Are migrations enabled?
+        if (!isMigrationsEnabled())
         {
             enableMigrations();
-            appliedMigrations = Collections.EMPTY_SET;
         }
 
-        Set<Migration> availableMigrations = migrationResolver.resolve(dbType);
-
-        // Which migrations need to be applied (ie: are pending)?
-        // TODO This seems like something that could be in its own method.
-        final List<Migration> pendingMigrations = new ArrayList<Migration>(availableMigrations.size());
-        CollectionUtils.select(availableMigrations, new PendingMigrationPredicate(appliedMigrations), pendingMigrations);
-        Collections.sort(pendingMigrations);
+        final Collection<Migration> pendingMigrations = pendingMigrations();
 
         if (pendingMigrations.isEmpty())
         {
@@ -100,7 +70,6 @@ public class DataSourceMigrationManager implements MigrationManager
             return;
         }
 
-        // TODO Check that no two pending migrations are the same version.
         StopWatch watch = new StopWatch();
         watch.start();
 
@@ -108,11 +77,10 @@ public class DataSourceMigrationManager implements MigrationManager
 
         try
         {
-            jdbcTemplate.execute(new ConnectionCallback()
+            jdbcTemplate.execute(new ConnectionCallback<Object>()
             {
                 public Object doInConnection(Connection connection) throws SQLException, DataAccessException
                 {
-                    int successfulCount = 0;
                     Migration currentMigration = null;
 
                     final boolean autoCommit = connection.getAutoCommit();
@@ -133,8 +101,6 @@ public class DataSourceMigrationManager implements MigrationManager
                             versionStrategy.recordMigration(dbType, connection, currentMigration.getVersion(), startTime, migrationWatch.getTime());
 
                             connection.commit();
-
-                            ++successfulCount;
                         }
                     }
                     catch (Throwable e)
@@ -149,8 +115,7 @@ public class DataSourceMigrationManager implements MigrationManager
                     {
                         connection.setAutoCommit(autoCommit);
                     }
-
-                    return successfulCount;
+                    return null;
                 }
             });
         }
@@ -180,22 +145,63 @@ public class DataSourceMigrationManager implements MigrationManager
         this.versionStrategy = versionStrategy;
     }
 
-    private DatabaseType determineDatabaseType()
+    protected DatabaseType determineDatabaseType()
     {
-        return (DatabaseType) jdbcTemplate.execute(new ConnectionCallback()
+        return jdbcTemplate.execute(new ConnectionCallback<DatabaseType>()
         {
-            public Object doInConnection(Connection connection) throws SQLException, DataAccessException
+            public DatabaseType doInConnection(Connection connection) throws SQLException, DataAccessException
             {
                 return DatabaseUtils.databaseType(connection.getMetaData().getURL());
             }
         });
     }
 
-    private Set<String> determineAppliedMigrationVersions()
+    protected boolean isMigrationsEnabled()
     {
-        return (Set<String>) jdbcTemplate.execute(new ConnectionCallback()
+        try
         {
-            public Object doInConnection(Connection connection) throws SQLException, DataAccessException
+            return jdbcTemplate.execute(new ConnectionCallback<Boolean>()
+            {
+                public Boolean doInConnection(Connection connection) throws SQLException, DataAccessException
+                {
+                    return versionStrategy.isEnabled(dbType, connection);
+                }
+            });
+        }
+        catch (DataAccessException e)
+        {
+            logger.error("Could not enable migrations.", e);
+            throw new MigrationException(e);
+        }
+    }
+
+    protected void enableMigrations()
+    {
+        try
+        {
+            jdbcTemplate.execute(new ConnectionCallback<Object>()
+            {
+                public Object doInConnection(Connection connection) throws SQLException, DataAccessException
+                {
+                    versionStrategy.enableVersioning(dbType, connection);
+                    return null;
+                }
+            });
+
+            logger.info("Successfully enabled migrations.");
+        }
+        catch (DataAccessException e)
+        {
+            logger.error("Could not enable migrations.", e);
+            throw new MigrationException(e);
+        }
+    }
+
+    protected Set<String> determineAppliedMigrationVersions()
+    {
+        return jdbcTemplate.execute(new ConnectionCallback<Set<String>>()
+        {
+            public Set<String> doInConnection(Connection connection) throws SQLException, DataAccessException
             {
                 return versionStrategy.appliedMigrations(dbType, connection);
             }
@@ -208,7 +214,7 @@ public class DataSourceMigrationManager implements MigrationManager
 
         public PendingMigrationPredicate(Set<String> appliedMigrations)
         {
-            this.appliedMigrations = appliedMigrations == null ? Collections.EMPTY_SET : appliedMigrations;
+            this.appliedMigrations = appliedMigrations == null ? new HashSet<String>() : appliedMigrations;
         }
 
         public boolean evaluate(Object input)
@@ -222,6 +228,5 @@ public class DataSourceMigrationManager implements MigrationManager
                 return !appliedMigrations.contains(input.toString());
             }
         }
-
     }
 }

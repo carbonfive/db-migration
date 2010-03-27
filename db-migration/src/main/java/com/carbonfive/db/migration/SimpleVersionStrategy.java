@@ -40,6 +40,20 @@ public class SimpleVersionStrategy implements VersionStrategy
         enableVersioningDDL.put(SQL_SERVER, "create table %s (%s varchar(32) not null unique, %s datetime not null, %s int not null)");
     }
 
+    public boolean isEnabled(DatabaseType dbType, Connection connection)
+    {
+        try
+        {
+            connection.createStatement().executeQuery("select count(*) from " + versionTable);
+        }
+        catch (SQLException e)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
     public void enableVersioning(DatabaseType dbType, Connection connection)
     {
         try
@@ -55,12 +69,8 @@ public class SimpleVersionStrategy implements VersionStrategy
 
     public Set<String> appliedMigrations(DatabaseType dbType, Connection connection)
     {
-        // Make sure the version table exists.
-        try
-        {
-            connection.createStatement().executeQuery("select count(*) from " + versionTable);
-        }
-        catch (SQLException e)
+        // Make sure migrations is enabled.
+        if (!isEnabled(dbType, connection))
         {
             return null;
         }

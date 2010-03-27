@@ -1,5 +1,7 @@
 package com.carbonfive.db.migration;
 
+// MigrationFailedException
+// DuplicateMigrationException
 public class MigrationException extends RuntimeException
 {
     public MigrationException()
