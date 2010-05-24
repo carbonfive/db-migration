@@ -18,6 +18,7 @@ import static java.lang.String.format;
  * <p/>
  *
  * @goal check
+ * @phase test-compile
  */
 public class CheckMojo extends AbstractMigrationMojo
 {
