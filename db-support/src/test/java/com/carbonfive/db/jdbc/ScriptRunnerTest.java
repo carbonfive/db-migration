@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
 
-public class ScriptRunnerImplTest
+public class ScriptRunnerTest
 {
     @Test
     public void scriptRunnerShouldBatchSimpleCommands() throws Exception
@@ -29,6 +29,27 @@ public class ScriptRunnerImplTest
                 is(equalToIgnoringWhiteSpace("create table users ( username varchar not null, password varchar not null )")));
         assertThat(statements.get(1).toString(),
                 is(equalToIgnoringWhiteSpace("alter table users add index (username), add unique (username)")));
+    }
+
+    @Test
+    public void scriptRunnerShouldHandleComplexCommands() throws Exception
+    {
+        ScriptRunner runner = new ScriptRunner(DatabaseType.MYSQL);
+        Reader reader = new InputStreamReader(getClass().getResourceAsStream("complex.sql"));
+        MockConnection connection = new MockConnection();
+
+        runner.execute(connection, reader);
+
+        List statements = connection.getStatementResultSetHandler().getExecutedStatements();
+
+        String expectedSql = "update dav_file set parent = ( select id from ( select id from dav_file where name = '__SITE_PROTECTED__' ) as x )" +
+                " where ( name = 'templates' and parent is null )" +
+                " or ( name = 'velocity' and parent is null )" +
+                " or ( name = 'tags' and parent is null )" +
+                " or ( name = 'ctd' and parent is null )";
+
+        assertThat(statements.size(), is(1));
+        assertThat(statements.get(0).toString(), is(equalToIgnoringWhiteSpace(expectedSql)));
     }
 
     @Test

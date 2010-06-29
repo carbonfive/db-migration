@@ -87,7 +87,7 @@ public class ScriptRunner
                     {
                         delimiter = line.substring(10).trim();
                     }
-                    else if ((command.length() == 0) && containsIgnoreCase(line, " as "))
+                    else if ((command.length() == 0) && startsWithIgnoreCase(line, "create ") && containsIgnoreCase(line, " as "))
                     {
                         delimiter = line.substring(line.toLowerCase().lastIndexOf(" as ") + 4);
                         command.append(line);
