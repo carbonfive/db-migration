@@ -12,6 +12,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.io.IOException;
 import java.util.*;
 
+import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
@@ -108,6 +109,12 @@ public class ResourceMigrationResolver implements MigrationResolver
         for (Resource resource : resources)
         {
             String version = versionExtractor.extractVersion(resource.getFilename());
+            if (find(migrations, new Migration.MigrationVersionPredicate(version)) != null)
+            {
+                String message = "Non-unique migration version.";
+                logger.error(message);
+                throw new MigrationException(message);
+            }
             migrations.add(migrationFactory.create(version, resource));
         }
 

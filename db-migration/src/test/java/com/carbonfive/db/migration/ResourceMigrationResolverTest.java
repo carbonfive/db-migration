@@ -14,6 +14,7 @@ public class ResourceMigrationResolverTest
 {
     static final String SINGLE = "classpath:/test_migrations/valid_1/";
     static final String MULTIPLE = "classpath:/test_migrations/valid_2/";
+    static final String DUPLICATE = "classpath:/test_migrations/duplicate_1/";
 
     @Test
     public void testResolveMigrationsSet1()
@@ -31,6 +32,13 @@ public class ResourceMigrationResolverTest
         Set<Migration> migrations = resolver.resolve(DatabaseType.UNKNOWN);
         assertNotNull(migrations);
         assertThat(migrations, hasSize(3));
+    }
+
+    @Test(expected = MigrationException.class)
+    public void testShouldThrowMigrationExceptionOnNonUniqueVersion()
+    {
+        ResourceMigrationResolver resolver = new ResourceMigrationResolver(DUPLICATE);
+        resolver.resolve(DatabaseType.UNKNOWN);
     }
 
     @Test
