@@ -1,8 +1,16 @@
 package com.carbonfive.db.jdbc;
 
-import static com.carbonfive.db.jdbc.DatabaseType.*;
-import static org.apache.commons.lang.StringUtils.*;
-import org.apache.commons.lang.*;
+import org.apache.commons.lang3.Validate;
+
+import static com.carbonfive.db.jdbc.DatabaseType.DB2;
+import static com.carbonfive.db.jdbc.DatabaseType.H2;
+import static com.carbonfive.db.jdbc.DatabaseType.HSQL;
+import static com.carbonfive.db.jdbc.DatabaseType.MYSQL;
+import static com.carbonfive.db.jdbc.DatabaseType.ORACLE;
+import static com.carbonfive.db.jdbc.DatabaseType.POSTGRESQL;
+import static com.carbonfive.db.jdbc.DatabaseType.SQL_SERVER;
+import static com.carbonfive.db.jdbc.DatabaseType.UNKNOWN;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class DatabaseUtils
 {
