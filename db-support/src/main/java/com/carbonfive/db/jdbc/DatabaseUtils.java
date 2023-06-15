@@ -35,7 +35,7 @@ public class DatabaseUtils
         Validate.isTrue(isNotBlank(url));
 
         if (url.contains(POSTGRESQL_FRAGMENT)) { return "org.postgresql.Driver"; }
-        if (url.contains(MYSQL_FRAGMENT)) { return "com.mysql.jdbc.Driver"; }
+        if (url.contains(MYSQL_FRAGMENT)) { return "com.mysql.cj.jdbc.Driver"; }
         if (url.contains(HSQL_FRAGMENT)) { return "org.hsqldb.jdbcDriver"; }
         if (url.contains(H2_FRAGMENT)) { return "org.h2.Driver"; }
         if (url.contains(SQL_SERVER_JTDS_FRAGMENT)) { return "net.sourceforge.jtds.jdbc.Driver"; }

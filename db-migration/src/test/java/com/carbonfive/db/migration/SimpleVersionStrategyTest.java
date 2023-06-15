@@ -81,7 +81,7 @@ public class SimpleVersionStrategyTest
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         assertThat(jdbcTemplate.queryForObject("select count(*) from " + TABLE_NAME, Integer.class), is(1));
-        assertThat(jdbcTemplate.queryForObject("select " + VERSION_COLUMN + " from " + TABLE_NAME, Integer.class, String.class), is(v1));
+        assertThat(jdbcTemplate.queryForObject("select " + VERSION_COLUMN + " from " + TABLE_NAME, String.class), is(v1));
 
         connection = dataSource.getConnection();
         strategy.recordMigration(DatabaseType.H2, connection, v2, new Date(), 231);

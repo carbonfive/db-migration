@@ -1,8 +1,8 @@
 package com.carbonfive.db.migration;
 
 import com.carbonfive.db.jdbc.DatabaseType;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.io.IOException;
 import java.util.*;
 
-import static org.apache.commons.collections.CollectionUtils.find;
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.collections4.CollectionUtils.find;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 /**

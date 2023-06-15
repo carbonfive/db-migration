@@ -1,7 +1,7 @@
 package com.carbonfive.db.migration;
 
 import com.carbonfive.db.jdbc.DatabaseType;
-import org.apache.commons.collections.map.DefaultedMap;
+import org.apache.commons.collections4.map.DefaultedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

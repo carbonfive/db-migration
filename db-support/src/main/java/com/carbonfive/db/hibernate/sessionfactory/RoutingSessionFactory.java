@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class RoutingSessionFactory implements SessionFactory {
-    private Map<Object, SessionFactory> sessionFactories = new HashMap<>();
-    private EntityManager entityManager = getSessionFactory().createEntityManager();
+    private final Map<Object, SessionFactory> sessionFactories = new HashMap<>();
+    private final EntityManager entityManager = getSessionFactory().createEntityManager();
 
     public FilterDefinition getFilterDefinition(String filterName) throws HibernateException {
         return getSessionFactory().getFilterDefinition(filterName);
