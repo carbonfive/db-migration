@@ -25,7 +25,7 @@
     </organization>
 
     <prerequisites>
-        <maven>2.0.6</maven>
+        <maven>3.8.1</maven>
     </prerequisites>
 
     <modules>
@@ -45,21 +45,6 @@
     <scm>
         <connection>scm:svn:https://c5-db-migration.googlecode.com/svn/trunk/</connection>
     </scm>
-
-    <repositories>
-        <repository>
-            <id>c5-public-repository</id>
-            <name>Carbon Five Public Repository</name>
-            <url>http://mvn.carbonfive.com/public</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jboss-repository</id>
-            <url>http://repository.jboss.org/maven2</url>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -155,8 +140,8 @@
                 <version>1.6.2</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

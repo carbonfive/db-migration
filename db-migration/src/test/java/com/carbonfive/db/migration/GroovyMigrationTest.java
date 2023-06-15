@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -30,7 +30,7 @@ public class GroovyMigrationTest
         new GroovyMigration("1", script).migrate(DatabaseType.H2, connection);
         connection.close();
 
-        SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-        assertThat(jdbcTemplate.queryForInt("select count(*) from users"), is(1));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        assertThat(jdbcTemplate.queryForObject("select count(*) from users", Integer.class), is(1));
     }
 }

@@ -3,7 +3,7 @@ package com.carbonfive.db.migration;
 import com.carbonfive.db.jdbc.DatabaseType;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -42,8 +42,8 @@ public class SimpleVersionStrategyTest
         strategy.enableVersioning(DatabaseType.H2, connection);
         connection.close();
 
-        SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-        jdbcTemplate.queryForInt("select count(*)" + VERSION_COLUMN + " from " + TABLE_NAME); // Throws exception is table doesn't exist.
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.queryForObject("select count(*)" + VERSION_COLUMN + " from " + TABLE_NAME, Integer.class); // Throws exception is table doesn't exist.
     }
 
     @Test
@@ -79,15 +79,15 @@ public class SimpleVersionStrategyTest
         strategy.recordMigration(DatabaseType.H2, connection, v1, new Date(), 768);
         connection.close();
 
-        SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-        assertThat(jdbcTemplate.queryForInt("select count(*) from " + TABLE_NAME), is(1));
-        assertThat(jdbcTemplate.queryForObject("select " + VERSION_COLUMN + " from " + TABLE_NAME, String.class), is(v1));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        assertThat(jdbcTemplate.queryForObject("select count(*) from " + TABLE_NAME, Integer.class), is(1));
+        assertThat(jdbcTemplate.queryForObject("select " + VERSION_COLUMN + " from " + TABLE_NAME, Integer.class, String.class), is(v1));
 
         connection = dataSource.getConnection();
         strategy.recordMigration(DatabaseType.H2, connection, v2, new Date(), 231);
         connection.close();
 
-        assertThat(jdbcTemplate.queryForInt("select count(*) from " + TABLE_NAME), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from " + TABLE_NAME, Integer.class), is(2));
 
         connection = dataSource.getConnection();
         Set<String> appliedMigrations = strategy.appliedMigrations(DatabaseType.H2, connection);

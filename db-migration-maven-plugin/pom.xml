@@ -12,21 +12,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>3.3.0</version>
+            <version>1.1</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -43,8 +43,8 @@
             <version>2.1.0</version>
             <exclusions>
                 <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

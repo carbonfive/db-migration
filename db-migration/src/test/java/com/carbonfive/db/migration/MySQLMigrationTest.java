@@ -8,7 +8,7 @@ import static org.hamcrest.core.Is.is;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
@@ -18,7 +18,7 @@ import static java.lang.System.getProperty;
 public class MySQLMigrationTest
 {
     private DataSourceMigrationManager migrationManager;
-    private SimpleJdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private static final String URL = format("jdbc:mysql://%s/mysql_migration_test", getProperty("jdbc.host", "localhost"));
     private static final String USERNAME = "dev";
@@ -33,7 +33,7 @@ public class MySQLMigrationTest
         migrationManager = new DataSourceMigrationManager(dataSource);
         migrationManager.setMigrationResolver(new ResourceMigrationResolver("classpath:/test_migrations/mysql_50/"));
 
-        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @After
@@ -65,9 +65,9 @@ public class MySQLMigrationTest
     {
         migrationManager.migrate();
 
-        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(5));
+        assertThat(jdbcTemplate.queryForObject("select count(version) from schema_version", Integer.class), is(5));
 
-        assertThat(jdbcTemplate.queryForInt("select count(*) from books"), is(9));
-        assertThat(jdbcTemplate.queryForInt("select count(*) from authors"), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from books", Integer.class), is(9));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from authors", Integer.class), is(2));
     }
 }

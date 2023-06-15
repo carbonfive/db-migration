@@ -5,7 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 public class H2MigrationTest
 {
     private DataSourceMigrationManager migrationManager;
-    private SimpleJdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private static final String URL = "jdbc:h2:mem:h2-migration-test;DB_CLOSE_DELAY=-1";
     private static final String USERNAME = "sa";
@@ -26,7 +26,7 @@ public class H2MigrationTest
         migrationManager = new DataSourceMigrationManager(dataSource);
         migrationManager.setMigrationResolver(new ResourceMigrationResolver("classpath:/test_migrations/h2/"));
 
-        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Test
@@ -34,6 +34,6 @@ public class H2MigrationTest
     {
         migrationManager.migrate();
 
-        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(version) from schema_version", Integer.class), is(2));
     }
 }
