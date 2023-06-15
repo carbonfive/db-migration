@@ -1,6 +1,7 @@
 package com.carbonfive.db.hibernate.usertypes;
 
 import org.hibernate.*;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.*;
 
 import java.io.*;
@@ -8,7 +9,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * A hibernate user type for mapping Java 1.5 enum types to and from database columns.  Can be used as identifiers or discriminators.
+ * A hibernated user type for mapping Java 1.5 enum types to and from database columns.  Can be used as identifiers or discriminators.
  * <p/>
  * The name of the enum is stored in the database.  For more control over what code is persisted, see EnhancedEnumUserType.
  * <p/>
@@ -66,6 +67,16 @@ public class EnumUserType implements EnhancedUserType, ParameterizedType
         return x.hashCode();
     }
 
+    @Override
+    public Object nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws SQLException {
+
+    }
+
     public boolean isMutable()
     {
         return false;
@@ -94,6 +105,11 @@ public class EnumUserType implements EnhancedUserType, ParameterizedType
         return original;
     }
 
+    @Override
+    public int getSqlType() {
+        return 0;
+    }
+
     public Class returnedClass()
     {
         return enumClass;
@@ -104,19 +120,18 @@ public class EnumUserType implements EnhancedUserType, ParameterizedType
         return new int[] { Types.VARCHAR };
     }
 
-    public String objectToSQLString(Object value)
-    {
+    @Override
+    public String toSqlLiteral(Object value) {
         return '\'' + ((Enum) value).name() + '\'';
     }
 
-    public String toXMLString(Object value)
-    {
+    @Override
+    public String toString(Object value) throws HibernateException {
         return ((Enum) value).name();
     }
 
-    public Object fromXMLString(String xmlValue)
-    {
-        return Enum.valueOf(enumClass, xmlValue);
+    @Override
+    public Object fromStringValue(CharSequence sequence) throws HibernateException {
+        return Enum.valueOf(enumClass, sequence.toString());
     }
-
 }
