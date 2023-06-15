@@ -1,21 +1,14 @@
 package com.carbonfive.db.hibernate;
 
-import org.hibernate.*;
 
-import java.util.*;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
 
-public class HibernateUtils
-{
-    public static void clearSecondLevelCache(SessionFactory sessionFactory) throws HibernateException
-    {
-        for (String clazz : (Set<String>) sessionFactory.getAllClassMetadata().keySet())
-        {
-            sessionFactory.evictEntity(clazz);
-        }
-        for (String rolename : (Set<String>) sessionFactory.getAllCollectionMetadata().keySet())
-        {
-            sessionFactory.evictCollection(rolename);
-        }
-        sessionFactory.evictQueries();
+public class HibernateUtils {
+    public static void clearSecondLevelCache(SessionFactory sessionFactory) throws HibernateException {
+        sessionFactory.getCache().evictEntityData();
+        sessionFactory.getCache().evictAll();
+        sessionFactory.getCache().evictAllRegions();
+        sessionFactory.getCache().evictQueryRegions();
     }
 }

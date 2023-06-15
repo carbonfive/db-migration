@@ -10,7 +10,7 @@ import org.junit.After;
 import static org.junit.Assume.assumeThat;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
 public class SQLServerMigrationTest
 {
     private DataSourceMigrationManager migrationManager;
-    private SimpleJdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private static final String URL = "jdbc:jtds:sqlserver://sqlserver2000/sqlserver_migration_test";
     private static final String USERNAME = "dev";
@@ -40,7 +40,7 @@ public class SQLServerMigrationTest
         migrationManager = new DataSourceMigrationManager(dataSource);
         migrationManager.setMigrationResolver(new ResourceMigrationResolver("classpath:/test_migrations/sqlserver_2000/"));
 
-        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @After
@@ -54,6 +54,6 @@ public class SQLServerMigrationTest
     {
         migrationManager.migrate();
 
-        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(version) from schema_version", Integer.class), is(2));
     }
 }

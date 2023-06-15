@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.postgresql.Driver;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
@@ -19,7 +19,7 @@ import static org.hamcrest.core.Is.is;
 public class PostgreSQLMigrationTest
 {
     private DataSourceMigrationManager migrationManager;
-    private SimpleJdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private static final String URL = format("jdbc:postgresql://%s/postgresql_migration_test", getProperty("jdbc.host", "localhost"));
     private static final String USERNAME = "dev";
@@ -34,7 +34,7 @@ public class PostgreSQLMigrationTest
         migrationManager = new DataSourceMigrationManager(dataSource);
         migrationManager.setMigrationResolver(new ResourceMigrationResolver("classpath:/test_migrations/postgresql_8/"));
 
-        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @After
@@ -48,6 +48,6 @@ public class PostgreSQLMigrationTest
     {
         migrationManager.migrate();
 
-        assertThat(jdbcTemplate.queryForInt("select count(version) from schema_version"), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(version) from schema_version", Integer.class), is(2));
     }
 }

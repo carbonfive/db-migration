@@ -2,7 +2,7 @@ package com.carbonfive.db.migration;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
@@ -18,7 +18,7 @@ public class DataSourceMigrationManagerTest
     static final String BAD_SCRIPT = "classpath:/test_migrations/bad_script_1/";
 
     private DataSourceMigrationManager migrationManager;
-    private SimpleJdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setup()
@@ -26,14 +26,14 @@ public class DataSourceMigrationManagerTest
         DataSource dataSource = DatabaseTestUtils.createUniqueDataSource();
         migrationManager = new DataSourceMigrationManager(dataSource);
 
-        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Test
     public void enableMigrationsShouldCreateSchemaTrackingTable()
     {
         migrationManager.enableMigrations();
-        jdbcTemplate.queryForInt("select count(*) from schema_version"); // Throws exception if table doesn't exist.
+        jdbcTemplate.queryForObject("select count(*) from schema_version", Integer.class); // Throws exception if table doesn't exist.
     }
 
     @Test
@@ -44,7 +44,7 @@ public class DataSourceMigrationManagerTest
         migrationManager.migrate();
         assertThat(migrationManager.validate(), is(true));
 
-        assertThat(jdbcTemplate.queryForInt("select count(*) from users"), is(3));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from users", Integer.class), is(3));
     }
 
     @Test
@@ -62,8 +62,8 @@ public class DataSourceMigrationManagerTest
         migrationManager.migrate();
         assertThat(migrationManager.validate(), is(true));
 
-        assertThat(jdbcTemplate.queryForInt("select count(*) from users"), is(3));
-        assertThat(jdbcTemplate.queryForInt("select count(*) from trips"), is(3));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from users", Integer.class), is(3));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from trips", Integer.class), is(3));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class DataSourceMigrationManagerTest
         {
         }
 
-        assertThat(jdbcTemplate.queryForInt("select count(*) from trips"), is(2));
+        assertThat(jdbcTemplate.queryForObject("select count(*) from trips", Integer.class), is(2));
         assertThat(migrationManager.validate(), is(false));
     }
 }

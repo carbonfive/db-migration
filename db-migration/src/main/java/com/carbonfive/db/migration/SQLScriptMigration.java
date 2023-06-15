@@ -3,7 +3,7 @@ package com.carbonfive.db.migration;
 import com.carbonfive.db.jdbc.DatabaseType;
 import com.carbonfive.db.jdbc.ScriptRunner;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;

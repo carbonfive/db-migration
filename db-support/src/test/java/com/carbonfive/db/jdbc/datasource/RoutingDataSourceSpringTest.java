@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,7 +47,7 @@ public class RoutingDataSourceSpringTest
         for (String dataSourceName : dataSourceNames)
         {
             contextService.setCurrentClient(dataSourceName);
-            SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             String name = jdbcTemplate.queryForObject("select name from db_name", String.class, Collections.EMPTY_MAP);
             assertThat(name, is(dataSourceName));
         }

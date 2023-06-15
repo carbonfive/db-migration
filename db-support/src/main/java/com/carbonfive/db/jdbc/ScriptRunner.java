@@ -8,8 +8,8 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.sql.*;
 
-import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 public class ScriptRunner
 {
